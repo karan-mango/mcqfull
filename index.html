@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="start-quiz">
+            <button id="start" onclick="startQuiz()">Start Quiz</button>
+        </div>
+        <div class="topic-list">
+            <h2>Select a Topic</h2>
+            <ul>
+                <li><button onclick="startTopicQuiz('microsoft Basics')">Microsoft Basics</button></li>
+                <li><button onclick="startTopicQuiz('excel and powerpoint')">Excel and PowerPoint</button></li>
+                <li><button onclick="startTopicQuiz('hardware')">Hardware</button></li>
+
+                <li><button onclick="startTopicQuiz('networking and internet')">Networking and Internet</button></li> 
+            </ul>
+        </div>
+        <div class="ques-cont" style="display: none;">
+            <h1>Quiz App</h1>
+            <hr>
+            <h2 id="ques"></h2>
+            <div class="options-cont"></div>
+            <button id="next" style="display: none;">Next</button>
+            <div id="scoreDisplay" class="score"></div>
+        </div>
+    </div>
+
+    <script>
+        let questions = {
+            "microsoft Basics": [
+            {
+                question: "Microsoft Word is ____ software.",
+                answers: [
+                    { text: "Application", correct: true },
+                    { text: "Compiler", correct: false },
+                    { text: "System", correct: false },
+                    { text: "Programming", correct: false }
+                ]
+            },
+            {
+                question: "Which is not in MS Word?",
+                answers: [
+                    { text: "Italic", correct: false },
+                    { text: "Magic tool", correct: true },
+                    { text: "Font", correct: false },
+                    { text: "Bold", correct: false }
+                ]
+            },
+            {
+                question: "____ cannot be used to work in MS Office.",
+                answers: [
+                    { text: "Joystick", correct: true },
+                    { text: "Scanner", correct: false },
+                    { text: "Light Pen", correct: false },
+                    { text: "Mouse", correct: false }
+                ]
+            },
+            {
+                question: "Which is not an edition of MS Word?",
+                answers: [
+                    { text: "MS Word 2003", correct: false },
+                    { text: "MS Word 2007", correct: false },
+                    { text: "MS Word 2010", correct: false },
+                    { text: "MS Word 1020", correct: true }
+                ]
+            },
+            {
+                question: "The ___ works with the standard Copy and Paste commands.",
+                answers: [
+                    { text: "View tab", correct: false },
+                    { text: "Paragraph dialog box", correct: false },
+                    { text: "Office Clipboard", correct: true },
+                    { text: "All of these", correct: false }
+                ]
+            },
+            {
+                question: "What is the blank space outside the printing area on a page?",
+                answers: [
+                    { text: "Clipart", correct: false },
+                    { text: "Margins", correct: true },
+                    { text: "Header", correct: false },
+                    { text: "Footer", correct: false }
+                ]
+            },
+            {
+                question: "Which of the following is an example of page orientation?",
+                answers: [
+                    { text: "Landscape", correct: true },
+                    { text: "Subscript", correct: false },
+                    { text: "Superscript", correct: false },
+                    { text: "A4", correct: false }
+                ]
+            },
+            {
+                question: "Formatting is performed on ____.",
+                answers: [
+                    { text: "Text", correct: false },
+                    { text: "Table", correct: false },
+                    { text: "Menu", correct: false },
+                    { text: "Both (a) and (b)", correct: true }
+                ]
+            },
+            {
+                question: "Which of the following software is used for making a resume?",
+                answers: [
+                    { text: "MS Excel", correct: false },
+                    { text: "MS Word", correct: true },
+                    { text: "DevC", correct: false },
+                    { text: "Java", correct: false }
+                ]
+            },
+            {
+                question: "Press ____ to open the help window in the MS Word document.",
+                answers: [
+                    { text: "F1", correct: true },
+                    { text: "F2", correct: false },
+                    { text: "F9", correct: false },
+                    { text: "F11", correct: false }
+                ]
+            },
+            {
+                question: "Select all the text in MS Word document by ____.",
+                answers: [
+                    { text: "Ctrl+S", correct: false },
+                    { text: "Ctrl+1", correct: false },
+                    { text: "Ctrl+A", correct: true },
+                    { text: "Ctrl+V", correct: false }
+                ]
+            },
+            {
+                question: "____ is not a part of an MS Word document.",
+                answers: [
+                    { text: "Quick access toolbar", correct: false },
+                    { text: "Start Menu button", correct: true },
+                    { text: "Home panel", correct: false },
+                    { text: "View option", correct: false }
+                ]
+            },
+            {
+                question: "The name of a Word document displays in ____.",
+                answers: [
+                    { text: "Ribbon", correct: false },
+                    { text: "Title bar", correct: true },
+                    { text: "Status bar", correct: false },
+                    { text: "Home tab", correct: false }
+                ]
+            },
+            {
+                question: "Each line represents how many letters in WordStar?",
+                answers: [
+                    { text: "20", correct: false },
+                    { text: "35", correct: false },
+                    { text: "65", correct: false },
+                    { text: "75", correct: true }
+                ]
+            },
+            {
+                question: "Which of the following are word processing software?",
+                answers: [
+                    { text: "WordPerfect", correct: false },
+                    { text: "WordPad", correct: false },
+                    { text: "MS Word", correct: false },
+                    { text: "All of the above", correct: true }
+                ]
+            },
+            {
+                question: "Which file starts with MS Word?",
+                answers: [
+                    { text: "Winword.exe", correct: true },
+                    { text: "Word.exe", correct: false },
+                    { text: "Msword.exe", correct: false },
+                    { text: "Word356.exe", correct: false }
+                ]
+            },
+            {
+                question: "Ctrl+N is used to ____.",
+                answers: [
+                    { text: "Save the Document", correct: false },
+                    { text: "Open the Document", correct: false },
+                    { text: "Create a New Document", correct: true },
+                    { text: "Close the Document", correct: false }
+                ]
+            }
+        ],
+            "excel and powerpoint": [
+            {
+                question: "Excel is a ____ program developed by Microsoft.",
+                answers: [
+                    { text: "Spreadsheet", correct: true },
+                    { text: "Document", correct: false },
+                    { text: "Data management", correct: false },
+                    { text: "All of the above", correct: false }
+                ]
+            },
+            {
+                question: "What is the extension of a Microsoft Excel file?",
+                answers: [
+                    { text: "msxcl", correct: false },
+                    { text: "xcl", correct: false },
+                    { text: "xlsx", correct: true },
+                    { text: "xlsm", correct: false }
+                ]
+            },
+            {
+                question: "Shortcut key CTRL+D is used to ____.",
+                answers: [
+                    { text: "Open font dialog box", correct: false },
+                    { text: "Open format cells dialog box", correct: false },
+                    { text: "Shift current cell's value in the right cell", correct: false },
+                    { text: "Fill down in the selection", correct: true }
+                ]
+            },
+            {
+                question: "Which logical function returns TRUE if all arguments evaluate TRUE; FALSE if not?",
+                answers: [
+                    { text: "OR", correct: false },
+                    { text: "AND", correct: true },
+                    { text: "IF", correct: false },
+                    { text: "ANDIF", correct: false }
+                ]
+            },
+            {
+                question: "Which logical function returns TRUE if one or more arguments evaluate to TRUE; FALSE if all arguments evaluate to FALSE?",
+                answers: [
+                    { text: "OR", correct: true },
+                    { text: "AND", correct: false },
+                    { text: "IF", correct: false },
+                    { text: "ANDIF", correct: false }
+                ]
+            },
+            {
+                question: "Which function is used to create a date with year, month, and day?",
+                answers: [
+                    { text: "DATE()", correct: true },
+                    { text: "DATEDIF()", correct: false },
+                    { text: "DATEVALUE()", correct: false },
+                    { text: "CURDATE()", correct: false }
+                ]
+            },
+            {
+                question: "What is the keyboard shortcut to insert a SUM formula in MS Excel?",
+                answers: [
+                    { text: "CTRL+=", correct: false },
+                    { text: "ALT+=", correct: true },
+                    { text: "ALT+S", correct: false },
+                    { text: "CTRL+ALT+=", correct: false }
+                ]
+            },
+            {
+                question: "Which feature is used to wrap extra-long text into multiple lines in a cell?",
+                answers: [
+                    { text: "WordWrap", correct: false },
+                    { text: "Letter Wrap", correct: false },
+                    { text: "TextWrap", correct: false },
+                    { text: "WrapText", correct: true }
+                ]
+            },
+            {
+                question: "Which feature is used to rotate the text diagonally or vertically in selected cells in MS Excel?",
+                answers: [
+                    { text: "Orientation", correct: true },
+                    { text: "Text Layout", correct: false },
+                    { text: "TextFlip", correct: false },
+                    { text: "CellOrientation", correct: false }
+                ]
+            },
+            {
+                question: "In MS PowerPoint, the designs that regulate layout and formatting for the slide are commonly known as:",
+                answers: [
+                    { text: "Blueprints", correct: false },
+                    { text: "Placeholders", correct: false },
+                    { text: "Templates", correct: true },
+                    { text: "Design Plates", correct: false }
+                ]
+            },
+            {
+                question: "What is the max Zoom percentage in MS PowerPoint?",
+                answers: [
+                    { text: "400%", correct: true },
+                    { text: "300%", correct: false },
+                    { text: "200%", correct: false },
+                    { text: "100%", correct: false }
+                ]
+            },
+            {
+                question: "Which of these is the default page setup orientation of the slides in PowerPoint?",
+                answers: [
+                    { text: "Landscape", correct: true },
+                    { text: "Portrait", correct: false },
+                    { text: "Vertical", correct: false },
+                    { text: "None of the above", correct: false }
+                ]
+            },
+            {
+                question: "From which menu can we access a TextBox, Picture, Chart, etc.?",
+                answers: [
+                    { text: "View", correct: false },
+                    { text: "Insert", correct: true },
+                    { text: "Edit", correct: false },
+                    { text: "Home", correct: false }
+                ]
+            },
+            {
+                question: "Which of these sections does a slide layout NOT have?",
+                answers: [
+                    { text: "Lists", correct: false },
+                    { text: "Animations", correct: true },
+                    { text: "Titles", correct: false },
+                    { text: "Charts", correct: false }
+                ]
+            },
+            {
+                question: "What do we use if we want to add text in a given slide?",
+                answers: [
+                    { text: "Comment Box", correct: false },
+                    { text: "Text Layer", correct: false },
+                    { text: "Note Box", correct: false },
+                    { text: "TextBox", correct: true }
+                ]
+            },
+            {
+                question: "Which type of template provides users with a design concept, color scheme, and fonts for presentation?",
+                answers: [
+                    { text: "Content", correct: false },
+                    { text: "Format", correct: false },
+                    { text: "Normal", correct: false },
+                    { text: "Design", correct: true }
+                ]
+            },
+            {
+                question: "What is the file extension of a PowerPoint file?",
+                answers: [
+                    { text: "Powerpoint", correct: false },
+                    { text: "Powerpnt", correct: false },
+                    { text: "Ppnt", correct: false },
+                    { text: "Pptx", correct: true }
+                ]
+            },
+            {
+                question: "Which command is used to open PowerPoint from the RUN dialog box in Windows?",
+                answers: [
+                    { text: "Powerpoint", correct: false },
+                    { text: "Powerpnt", correct: true },
+                    { text: "Ppt", correct: false },
+                    { text: "Pptx", correct: false }
+                ]
+            },
+            {
+                question: "What is the shortcut key to delete the current slide in PowerPoint?",
+                answers: [
+                    { text: "Delete", correct: true },
+                    { text: "Backspace", correct: false },
+                    { text: "Insert", correct: false },
+                    { text: "Both A and B", correct: false }
+                ]
+            }
+        ],
+            "hardware":  [
+            {
+                question: "Which of the following is not hardware?",
+                answers: [
+                    { text: "Processor chip", correct: false },
+                    { text: "Printer", correct: false },
+                    { text: "Mouse", correct: false },
+                    { text: "Java", correct: true }
+                ]
+            },
+            {
+                question: "Which device is mostly used to enter data or information in a computer system?",
+                answers: [
+                    { text: "Touch screen", correct: false },
+                    { text: "Mouse", correct: false },
+                    { text: "Light pen", correct: false },
+                    { text: "Keyboard", correct: true }
+                ]
+            },
+            {
+                question: "Which of the following is not a type of mouse?",
+                answers: [
+                    { text: "Wireless mouse", correct: false },
+                    { text: "Optical mouse", correct: false },
+                    { text: "Mechanical mouse", correct: false },
+                    { text: "Electromechanical mouse", correct: true }
+                ]
+            },
+            {
+                question: "RAM is an example of:",
+                answers: [
+                    { text: "Secondary memory", correct: false },
+                    { text: "Primary memory", correct: true },
+                    { text: "Main memory", correct: true },
+                    { text: "Both (a) and (b)", correct: false }
+                ]
+            },
+            {
+                question: "RAM stands for:",
+                answers: [
+                    { text: "Read Access Memory", correct: false },
+                    { text: "Random Access Memory", correct: true },
+                    { text: "Random Memory", correct: false },
+                    { text: "None of these", correct: false }
+                ]
+            },
+            {
+                question: "All of the following are examples of storage devices except:",
+                answers: [
+                    { text: "Hard disk drives", correct: false },
+                    { text: "Printers", correct: true },
+                    { text: "USB drive", correct: false },
+                    { text: "DVD drives", correct: false }
+                ]
+            },
+            {
+                question: "A keyboard is this kind of device:",
+                answers: [
+                    { text: "Black", correct: false },
+                    { text: "Input", correct: true },
+                    { text: "Output", correct: false },
+                    { text: "Word Processing", correct: false }
+                ]
+            },
+            {
+                question: "The ___, also called the 'brains' of the computer, is responsible for processing data.",
+                answers: [
+                    { text: "Motherboard", correct: false },
+                    { text: "Memory", correct: false },
+                    { text: "RAM", correct: false },
+                    { text: "Central Processing Unit (CPU)", correct: true }
+                ]
+            },
+            {
+                question: "During the boot process, the ___ looks for the system files.",
+                answers: [
+                    { text: "CD", correct: false },
+                    { text: "BIOS", correct: true },
+                    { text: "CPU", correct: false },
+                    { text: "DVD", correct: false }
+                ]
+            },
+            {
+                question: "Which of the following is an example of an input device?",
+                answers: [
+                    { text: "Scanner", correct: true },
+                    { text: "Speaker", correct: false },
+                    { text: "CD", correct: false },
+                    { text: "Printer", correct: false }
+                ]
+            },
+            {
+                question: "A computer’s hard disk is:",
+                answers: [
+                    { text: "An arithmetic and logical unit", correct: false },
+                    { text: "Computer software", correct: false },
+                    { text: "An operating system", correct: false },
+                    { text: "Computer hardware", correct: true }
+                ]
+            },
+            {
+                question: "BIOS stands for:",
+                answers: [
+                    { text: "Basic Input Output System", correct: true },
+                    { text: "Basic Instruction Output System", correct: false },
+                    { text: "Basic Interface Output System", correct: false },
+                    { text: "All of these", correct: false }
+                ]
+            },
+            {
+                question: "LCD stands for:",
+                answers: [
+                    { text: "Liquid Crystal Display", correct: true },
+                    { text: "Laser Crystal Display", correct: false },
+                    { text: "Light Crystal Display", correct: false },
+                    { text: "All of these", correct: false }
+                ]
+            },
+            {
+                question: "First generation computer systems used:",
+                answers: [
+                    { text: "Transistors", correct: false },
+                    { text: "Vacuum Tubes", correct: true },
+                    { text: "Both (a) and (b)", correct: false },
+                    { text: "None of the above", correct: false }
+                ]
+            },
+            {
+                question: "The term that we use to describe physical components of a computer is:",
+                answers: [
+                    { text: "Hardware", correct: true },
+                    { text: "Input", correct: false },
+                    { text: "Software", correct: false },
+                    { text: "Operating System", correct: false }
+                ]
+            },
+            {
+                question: "Which part of the computer helps to store information?",
+                answers: [
+                    { text: "Disk drive", correct: true },
+                    { text: "Keyboard", correct: false },
+                    { text: "Monitor", correct: false },
+                    { text: "Printer", correct: false }
+                ]
+            },
+            {
+                question: "QWERTY is used with reference to:",
+                answers: [
+                    { text: "Monitor", correct: false },
+                    { text: "Printer", correct: false },
+                    { text: "Keyboard", correct: true },
+                    { text: "Mouse", correct: false }
+                ]
+            },
+            {
+                question: "DVD stands for:",
+                answers: [
+                    { text: "Digital Video Disk", correct: false },
+                    { text: "Digital Versatile Disk", correct: true }
+                ]
+            },
+            {
+                question: "This component is required to process data into information and consists of integrated circuits.",
+                answers: [
+                    { text: "Hard disk", correct: false },
+                    { text: "RAM", correct: false },
+                    { text: "CPU", correct: true },
+                    { text: "ROM", correct: false }
+                ]
+            },
+            {
+                question: "PCB stands for:",
+                answers: [
+                    { text: "Print Circuit Board", correct: false },
+                    { text: "Printed circuit board", correct: true },
+                    { text: "Printed computer board", correct: false },
+                    { text: "Printed common board", correct: false }
+                ]
+            }
+        ],
+        'networking and internet': [
+
+    {
+        question: "QWERTY is used with reference to:",
+        answers: [
+            { text: "Monitor", correct: false },
+            { text: "Printer", correct: false },
+            { text: "Keyboard", correct: true },
+            { text: "Mouse", correct: false }
+        ]
+    },
+    {
+        question: "DVD stands for:",
+        answers: [
+            { text: "Digital Video Disk", correct: false },
+            { text: "Digital Versatile Disk", correct: true }
+        ]
+    },
+    {
+        question: "This component is required to process data into information and consists of integrated circuits.",
+        answers: [
+            { text: "Harddisk", correct: false },
+            { text: "RAM", correct: false },
+            { text: "CPU", correct: true },
+            { text: "ROM", correct: false }
+        ]
+    },
+    {
+        question: "PCB stands for:",
+        answers: [
+            { text: "Print Circuit Board", correct: false },
+            { text: "Printed Circuit Board", correct: true },
+            { text: "Printed Computer Board", correct: false },
+            { text: "Printed Common Board", correct: false }
+        ]
+    },
+    {
+        question: "How long is an IPv6 address?",
+        answers: [
+            { text: "32 bits", correct: false },
+            { text: "128 bytes", correct: false },
+            { text: "64 bits", correct: false },
+            { text: "128 bits", correct: true }
+        ]
+    },
+    {
+        question: "The first network was called:",
+        answers: [
+            { text: "CNNET", correct: false },
+            { text: "NSFNET", correct: false },
+            { text: "ASAPNET", correct: false },
+            { text: "ARPANET", correct: true }
+        ]
+    },
+    {
+        question: "Which of the following topologies does need a hub?",
+        answers: [
+            { text: "Bus topology", correct: false },
+            { text: "Mesh topology", correct: false },
+            { text: "Ring topology", correct: false },
+            { text: "Star topology", correct: true }
+        ]
+    },
+    {
+        question: "Which network topology has the highest reliability?",
+        answers: [
+            { text: "Star topology", correct: false },
+            { text: "Tree topology", correct: false },
+            { text: "Hybrid topology", correct: false },
+            { text: "Mesh topology", correct: true }
+        ]
+    },
+    {
+        question: "MAN stands for:",
+        answers: [
+            { text: "Maximum Area Network", correct: false },
+            { text: "Metropolitan Area Network", correct: true },
+            { text: "Minimum Area Network", correct: false },
+            { text: "Main Area Network", correct: false }
+        ]
+    },
+    {
+        question: "The common name for a modulator-demodulator is:",
+        answers: [
+            { text: "Modem", correct: true },
+            { text: "Joiner", correct: false },
+            { text: "Networker", correct: false },
+            { text: "Connector", correct: false }
+        ]
+    },
+    {
+        question: "The slowest transmission speeds are those of:",
+        answers: [
+            { text: "Coaxial cable", correct: false },
+            { text: "Twisted-pair wire", correct: true },
+            { text: "Fiber-optic cable", correct: false }
+        ]
+    },
+    {
+        question: "A modem is connected to:",
+        answers: [
+            { text: "A telephone line", correct: true },
+            { text: "A MAN", correct: false },
+            { text: "A WLAN", correct: false },
+            { text: "A monitor", correct: false }
+        ]
+    },
+    {
+        question: "A ____ typically connects personal computers within a very limited geographical area, usually within a single building.",
+        answers: [
+            { text: "LAN", correct: true },
+            { text: "WAN", correct: false },
+            { text: "MAN", correct: false },
+            { text: "PAN", correct: false }
+        ]
+    },
+    {
+        question: "OSI stands for:",
+        answers: [
+            { text: "Open System Interconnection", correct: true },
+            { text: "Open Standard Internet", correct: false },
+            { text: "Open System Interconnected", correct: false },
+            { text: "Open Standard Intranet", correct: false }
+        ]
+    },
+    {
+        question: "NIC stands for:",
+        answers: [
+            { text: "Network Interface Card", correct: true },
+            { text: "Net Interface Card", correct: false },
+            { text: "Network Internet Card", correct: false },
+            { text: "Net Internet Connection", correct: false }
+        ]
+    },
+    {
+        question: "PAN stands for:",
+        answers: [
+            { text: "Personal Area Network", correct: true },
+            { text: "Person Area Net", correct: false },
+            { text: "Personal Area Protocol", correct: false },
+            { text: "Private Area Network", correct: false }
+        ]
+    },
+    {
+        question: "The internet is also known simply as:",
+        answers: [
+            { text: "NAT", correct: false },
+            { text: "NOT", correct: false },
+            { text: "NET", correct: false },
+            { text: "NFT", correct: false }
+        ]
+    },
+    {
+        question: "-------- to transmit information on the World Wide Web.",
+        answers: [
+            { text: "HTPP", correct: false },
+            { text: "HPPT", correct: false },
+            { text: "HTTP", correct: true },
+            { text: "HTTTP", correct: false }
+        ]
+    },
+    {
+        question: "A web address is also called a:",
+        answers: [
+            { text: "LRU", correct: false },
+            { text: "URL", correct: true },
+            { text: "LUR", correct: false },
+            { text: "ULR", correct: false }
+        ]
+    },
+    {
+        question: "The standard protocol of the Internet is:",
+        answers: [
+            { text: "Java", correct: false },
+            { text: "Flash", correct: false },
+            { text: "HTML", correct: false },
+            { text: "TCP/IP", correct: true }
+        ]
+    },
+    {
+        question: "The internet is:",
+        answers: [
+            { text: "Internal communication system", correct: false },
+            { text: "A communication system for the Indian Government", correct: false },
+            { text: "A large network of networks", correct: true },
+            { text: "All of these", correct: false }
+        ]
+    },
+    {
+        question: "Which of the following is used to write web pages?",
+        answers: [
+            { text: "URL", correct: false },
+            { text: "FTP", correct: false },
+            { text: "HTML", correct: true },
+            { text: "HTTP", correct: false }
+        ]
+    },
+    {
+        question: "www stands for:",
+        answers: [
+            { text: "World Wide Web", correct: true },
+            { text: "Web World Web", correct: false },
+            { text: "World Wide Weblink", correct: false },
+            { text: "Wide World Web", correct: false }
+        ]
+    },
+    {
+        question: "What was the first network that planted the seeds of the internet?",
+        answers: [
+            { text: "ARPANET", correct: true },
+            { text: "APARANET", correct: false },
+            { text: "RAPANET", correct: false },
+            { text: "PARANET", correct: false }
+        ]
+    },
+    {
+        question: "TCP stands for:",
+        answers: [
+            { text: "Transmission Control Protocol", correct: true },
+            { text: "Transistor Protocol", correct: false },
+            { text: "Transform Protocol", correct: false },
+            { text: "An Control Control Transmission Communicational Protocol", correct: false }
+        ]
+    },
+    {
+        question: "Which protocol helps to transfer files between computers?",
+        answers: [
+            { text: "FTP", correct: true },
+            { text: "HTTP", correct: false },
+            { text: "FTTP", correct: false },
+            { text: "HTP", correct: false }
+        ]
+    },
+    {
+        question: "DNS stands for:",
+        answers: [
+            { text: "Domain Name System", correct: true },
+            { text: "Domain Name Signal", correct: false },
+            { text: "Domain Number System", correct: false },
+            { text: "Disk Name System", correct: false }
+        ]
+    },
+    {
+        question: "SMTP stands for:",
+        answers: [
+            { text: "Simple Mail Transition Protocol", correct: false },
+            { text: "Simple Mail Transport Protocol", correct: false },
+            { text: "Simple Mail Terminal Protocol", correct: false },
+            { text: "Simple Mail Transfer Protocol", correct: true }
+        ]
+    },
+    {
+        question: "The Internet is a system of:",
+        answers: [
+            { text: "Website", correct: false },
+            { text: "Webpage", correct: false },
+            { text: "Software bundles", correct: false },
+            { text: "Interconnected computers", correct: true }
+        ]
+    }
+
+
+        
+        ]
+        
+        };
+
+        let score = 0;
+        let ques_index = 0;
+        let currentTopic = '';
+        const qe = document.querySelector('#ques');
+        const next = document.querySelector('#next');
+        const option_cont = document.querySelector('.options-cont');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const ques_cont = document.querySelector('.ques-cont');
+
+        function shuffleQuestions(questions) {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+        }
+
+        function startTopicQuiz(topic) {
+            currentTopic = topic;
+            score = 0;
+            ques_index = 0;
+            shuffleQuestions(questions[topic]);
+            document.querySelector('.topic-list').style.display = 'none';
+            ques_cont.style.display = 'block';
+            render_ques();
+        }
+
+        function render_ques() {
+            if (ques_index >= questions[currentTopic].length) {
+                showScore();
+                return;
+            }
+            option_cont.innerHTML = '';
+            let q = questions[currentTopic][ques_index];
+            qe.textContent = `Question ${ques_index + 1}: ${q.question}`;
+            q.answers.forEach((element, index) => {
+                let btn = document.createElement('button');
+                btn.classList.add('options');
+                btn.textContent = `${index + 1} : ${element.text}`;
+                option_cont.appendChild(btn);
+                btn.dataset.correct = element.correct;
+                btn.addEventListener('click', () => {
+                    checkans(btn);
+                    disableopt();
+                });
+            });
+            next.style.display = 'inline'; // Show the Next button
+        }
+
+        function disableopt() {
+            var optionButtons = document.querySelectorAll('.options');
+            optionButtons.forEach(button => {
+                button.disabled = true;
+                if (button.dataset.correct === 'true') {
+                    button.classList.add('green');
+                } else {
+                    button.classList.add('red');
+                }
+            });
+        }
+
+        function checkans(btn) {
+            if (btn.dataset.correct === 'true') {
+                btn.classList.add('green');
+                score++;
+            } else {
+                btn.classList.add('red');
+            }
+        }
+
+        next.addEventListener('click', () => {
+            ques_index++;
+            render_ques();
+            if (ques_index >= questions[currentTopic].length) {
+                next.style.display = 'none'; // Hide Next button at the end
+            }
+        });
+
+        function showScore() {
+            ques_cont.style.display = 'none';
+            scoreDisplay.textContent = `Your score is: ${score} out of ${questions[currentTopic].length}`;
+            scoreDisplay.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
